@@ -1,4 +1,11 @@
-File Tree structure
+#File Tree structure
+
+setenv DV_TOOL_VERSION    1.0.0
+setenv DV_TOOL_ROOT       ./dv_scripts
+setenv BAR_CMD            bar
+setenv RGR_CMD            rgr
+setenv DV_BAR_ROOT        $DV_TOOL_ROOT/${BAR_CMD}
+setenv DV_RGR_TOOT        $DV_TOOL_ROOT/${RGR_CMD}
 
 ./VERSION           # Version number file (like 1.0.0.0)
 ./doc               # documentations
