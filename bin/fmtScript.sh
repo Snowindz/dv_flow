@@ -1,6 +1,6 @@
 #!/bin/sh
 #######################################################################
-#(c) Copyright 2022 TBD, All rights reserved.
+#(c) Copyright 2022 Snowind, All rights reserved.
 #
 # This file and associated deliverables are the trade secrets,
 # confidential information and copyrighted works of TBD Co., Ltd.
@@ -13,7 +13,7 @@
 # File       :  fmtMake.sh
 # Project    :  
 # Module     :  fmtMake
-# Author     :  Lichao Zhang 
+# Author     :  Snowind Zhang 
 # Created on :  2022/1/14 18:58:43 
 # Description:  
 #
@@ -37,6 +37,7 @@ enFmt=1
 enFmt2=0
 enMrg=1
 
+# variable renaming
 orgVars=(QBAR QVMR QC_OPTS QBLD QAFENE)
 newVars=(AACER AARGR AA_OPTS AABLD AAFENE)
 newVars1=(XXCER XXRGR XX_OPTS XXBLD XXFENE)
