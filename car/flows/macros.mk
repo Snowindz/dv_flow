@@ -1,8 +1,6 @@
-# LC: TBD
 ###########################################
 # MACRO defines for ACCER flow
 ###########################################
-
 ifndef __macro_mk_guard
 __macro_mk_guard = 1
 
