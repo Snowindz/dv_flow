@@ -1,6 +1,6 @@
 # dv_flow scripts for CAR & RGR
 DV Flow scripts, which include two parts:
-- ./car: compile and run
+- ./car: compile (including elab/link) and run
 - ./rgr: regression
 
 Setup file:
