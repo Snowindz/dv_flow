@@ -8,8 +8,19 @@ RM	:= /usr/bin/env rm -rf
 TOUCH	:= /usr/bin/env touch
 
 # TBD, need add the path in env.
-__PERL		= /TBD/q3_10/bin/perl
-__PYTHON 	= /TBD/python/3.4.0/bin/python
+# __PERL := /TBD/q3_10/bin/perl
+ifneq ($(PERL_ROOT),'')
+__PERL := ${PERL_ROOT}/bin/perl
+else
+__PERL := perl
+endif
+
+# __PYTHON := /TBD/python/3.4.0/bin/python
+ifneq ($(PYTHON_ROOT),'')
+__PYTHON := ${PYTHON_ROOT}/bin/python
+else
+__PYTHON := python
+endif
 
 ifdef GMSL_TRACE
 __gmsl_tr1 = $(warning $0('$1'))
