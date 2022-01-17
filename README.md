@@ -1,2 +1,4 @@
-# dv_scripts
-My DV Flow scripts
+# dv_scripts CAR & RGR
+DV Flow scripts, which include two parts:
+- car: compile and run
+- rgr: regression
