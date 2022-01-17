@@ -1,4 +1,7 @@
+
+#######################################################
 # Public variables
+#######################################################
 SIM_TOP_COMPILE_DIR ?=
 SIM_TOP_BIN_DIR ?=
 SIM_TOP_DEFAULT_WORK_NAME ?= sim_top_work
@@ -6,7 +9,9 @@ SIM_TOP_DONE ?= 0
 SIM_TOP_DEFAULT_WORK_NAME ?= sim_top_work
 SIM_TOP_TASK ?= sim
 
+#######################################################
 # Internal vars
+#######################################################
 SIM_TOP_COMPILE_DIR ?=
 __AACER_REPORT_VARS += SIM_TOP_COMPILE_DIR
 
@@ -27,7 +32,9 @@ endif
 __CLEAN_SIM_TOP_ITEMS += ${__SIM_TOP_COMPILE_DIR}
 AARGR_SIM_TOP_DIR = ${__SIM_TOP_BIN_DIR}
 
+#######################################################
 # Tgts
+#######################################################
 __SIM_TOP_TOUCH_FILE_DIR ?= ${__SIM_TOP_BIN_DIR}/Makefile.Target
 __SIM_TOP_MAP_WORK ?= ${__SIM_TOP_TOUCH_FILE_DIR}/aacer_target^sim_top_map_work
 __SIM_TOP_TOOL = vcs_mx ##klw
@@ -68,7 +75,9 @@ __SIM_TOP_MODULE_NAME = $(strip ${SIM_TOP_MODULE_NAME})
 
 $(foreach __item,${__SIM_TOP_LIBS},$(eval $(call __gen_map_work_vars,sim_top,${__item})))
 
+#######################################################
 # RULEs
+#######################################################
 $(foreach __tool,${__SIM_TOP_TOOLS},$(eval $(call __gen_update_map_file_rule,sim_top,${__tool})))
 
 ifneq (${__SIM_TOP_MAP_WORK},)
