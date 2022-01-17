@@ -1,10 +1,10 @@
-#File Tree structure
+#File Tree structure for CAR (Compile & Run)
 
 setenv DV_TOOL_VERSION    1.0.0
 setenv DV_TOOL_ROOT       ./dv_scripts
-setenv BAR_CMD            bar
+setenv BAR_CMD            car
 setenv RGR_CMD            rgr
-setenv DV_BAR_ROOT        $DV_TOOL_ROOT/${BAR_CMD}
+setenv DV_BAR_ROOT        $DV_TOOL_ROOT/${CAR_CMD}
 setenv DV_RGR_TOOT        $DV_TOOL_ROOT/${RGR_CMD}
 
 
@@ -22,7 +22,7 @@ setenv DV_RGR_TOOT        $DV_TOOL_ROOT/${RGR_CMD}
  # Main makefiles
  #---------------------------
   template.mk 
-  qbar.mk
+  sim_artist.mk (bar.mk)
     #1. include common.mk, sub dir
     ./include/common.mk   # call gmsl, define common mk variables like SHELL/VERBOSITY/QUIET ...
     ./include/gmsl        # wrapper of __gmsl by using ifndef/define/endif to avoid of duplicated call
