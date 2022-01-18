@@ -17,7 +17,7 @@ source $env(DV_CAR_ROOT)/tcl/verdi/dump_fsdb.tcl
 run_tcl_cmd $tcl_file "config endofsim noexit"
 
 set user_cmds [list]
-if { [info exists env(RGR_SIMV_ON_START_TCL_CMDS) } {
+if { [info exists env(RGR_SIMV_ON_START_TCL_CMDS) ] } {
   set user_cmds [ split $env(RGR_SIMV_ON_START_TCL_CMDS) {;} ]
   puts "[$tcl_file] Info: found user defined cmd files from env RGR_SIMV_ON_START_TCL_CMDS"
 }
@@ -47,7 +47,7 @@ run_tcl_cmd $tcl_file "run $sim_run_time"
 # dump flush/off
 
 set user_cmds [list]
-if { [info exists env(RGR_SIMV_ON_EXIT_TCL_CMDS) } {
+if { [info exists env(RGR_SIMV_ON_EXIT_TCL_CMDS) ] } {
   set user_cmds [ split $env(RGR_SIMV_ON_EXIT_TCL_CMDS) {;} ]
   puts "[$tcl_file] Info: found user defined cmd files from env RGR_SIMV_ON_EXIT_TCL_CMDS"
 }
