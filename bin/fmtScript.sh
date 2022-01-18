@@ -1,29 +1,5 @@
 #!/bin/sh
-#######################################################################
-#(c) Copyright 2022 Snowind, All rights reserved.
-#
-# This file and associated deliverables are the trade secrets,
-# confidential information and copyrighted works of TBD Co., Ltd.
-# and are subject to your license agreement with TBD.
-#
-# Use of these deliverables for the purpose of making silicon from an IC
-# design is limited to the terms and conditions of your license agreement
-# with TBD If you have further questions please contact TBD.
-#------------------------------------------------------------------------
-# File       :  fmtMake.sh
-# Project    :  
-# Module     :  fmtMake
-# Author     :  Snowind Zhang 
-# Created on :  2022/1/14 18:58:43 
-# Description:  
-#
-# Revision   :  $Revision:$
-# Checked In :  $DateTime:$
-# Modified by:  $Author:$
-# Change     :  $Change:$
-#
-# $Id:$
-######################################################################
+
 __LC_DBG=
 #__LC_DBG="echo"
 script_name=./fmtMake
