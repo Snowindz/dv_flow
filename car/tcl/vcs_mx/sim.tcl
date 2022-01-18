@@ -1,11 +1,12 @@
-set this_tcl_file "sim.tcl"
-puts "# Source vcs_mx/$this_tcl_file"
+set tcl_file "sim.tcl"
+source $env(DV_CAR_ROOT)/tcl/cmn/cmn_proc.tcl
+puts "# Source vcs_mx/$tcl_file"
 
-#set env(DV_RGR_ROOT) $rgr_vars(DV_RGR_ROOT)
+
 ##############################
 # on_start
 ##############################
-# common.tcl
+source $env(DV_CAR_ROOT)/tcl/verdi/dump_fsdb.tcl
 
 # fsdb/vpd/vcd/evcd dump setup
 # fsdb.tcl
@@ -13,14 +14,15 @@ puts "# Source vcs_mx/$this_tcl_file"
 # vcd.tcl
 # evcd.tcl
 
-config endofsim noexit
+run_tcl_cmd $tcl_file "config endofsim noexit"
+
 set user_cmds [list]
 if { [info exists env(RGR_SIMV_ON_START_TCL_CMDS) } {
   set user_cmds [ split $env(RGR_SIMV_ON_START_TCL_CMDS) {;} ]
-  puts "[$this_tcl_file] Info: found user defined cmd files from env RGR_SIMV_ON_START_TCL_CMDS"
+  puts "[$tcl_file] Info: found user defined cmd files from env RGR_SIMV_ON_START_TCL_CMDS"
 }
-foreach cmd_file $user_cmds {
-  eval $cmd_file
+foreach cmd $user_cmds {
+  run_tcl_cmd $tcl_file $cmd
 }
 
 
@@ -31,11 +33,11 @@ foreach cmd_file $user_cmds {
 # - common.tcl
 # - dump_times.cl
 # - sar.tcl
-set rgr_sim_run_time ""
+set sim_run_time ""
 if { [info exist rgr_vars(__SIM_RUN_TIME) ] } {
-set rgr_sim_run_time $rgr_vars(__SIM_RUN_TIME)
+  set sim_run_time $rgr_vars(__SIM_RUN_TIME)
 }
-run $rgr_sim_run_time
+run_tcl_cmd $tcl_file "run $sim_run_time"
 
 ##############################
 # on_exit.tcl
@@ -47,11 +49,12 @@ run $rgr_sim_run_time
 set user_cmds [list]
 if { [info exists env(RGR_SIMV_ON_EXIT_TCL_CMDS) } {
   set user_cmds [ split $env(RGR_SIMV_ON_EXIT_TCL_CMDS) {;} ]
-  puts "[$this_tcl_file] Info: found user defined cmd files from env RGR_SIMV_ON_EXIT_TCL_CMDS"
+  puts "[$tcl_file] Info: found user defined cmd files from env RGR_SIMV_ON_EXIT_TCL_CMDS"
 }
-foreach cmd_file $user_cmds {
-  eval $cmd_file
+foreach cmd $user_cmds {
+  run_tcl_cmd $tcl_file $cmd
 }
+
 
 
 ##############################
