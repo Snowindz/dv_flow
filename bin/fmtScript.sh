@@ -24,130 +24,187 @@
 #
 # $Id:$
 ######################################################################
-
-
 __LC_DBG=
 #__LC_DBG="echo"
 
-orgDir=./flows.org
-fmtDir=./flows.fmt1
-fmtDir2=./flows.fmt2
-mrgFile=./flows.mrg.txt
-enFmt=1
-enFmt2=0
-enMrg=1
+script_name=./fmtMake
 
-# variable renaming
-orgVars=(QBAR QVMR QC_OPTS QBLD QAFENE)
-newVars=(AACER AARGR AA_OPTS AABLD AAFENE)
-newVars1=(XXCER XXRGR XX_OPTS XXBLD XXFENE)
+orgDir=./flows.org; orgVars=(QBAR QVMR QC_OPTS QBLD QAFENE);
 
-#echo "--SDBG: orgVars len=${#orgVars}, ${orgVars}"
-#echo "--SDBG: newVars len=${#newVars}"
-#echo "--SDBG: newVars1 len=${#newVars}"
+# orgDir -> fm0Dir
+enFmt0=0; fm0Dir=./flows.fmt0; 
+enFmt1=0; fm1Dir=./flows.fmt1; new1Vars=(AACER AARGR AA_OPTS AABLD AAFENE);
+enFmt2=0; fm2Dir=./flows.fmt2; new2Vars=(XXCER XXRGR XX_OPTS XXBLD XXFENE);
 
-if [ $enFmt -eq 1 ]; then
-	echo "--SINFO: begin to format ..."
+enMrg=1;  mrgDir=./flows.tgt.back;
+mrgFilesIncl=
+mrgFilesExcl=
+#mrgFilesIncl="abv.mk dut.mk elab.mk"
+#mrgFilesExcl="abv.mk"
 
-	[ -d $fmtDir.bak2 ] && rm -rf $fmtDir.bak2
-	[ -d $fmtDir.bak1 ] && mv $fmtDir.bak1 $fmtDir.bak2
-	[ -d $fmtDir.bak0 ] && mv $fmtDir.bak0 $fmtDir.bak1
-	[ -d $fmtDir ] 		&& mv $fmtDir 	   $fmtDir.bak0
-	cp -rf $orgDir $fmtDir
-	files="$fmtDir/*.*"
-
-	# pre-proc
-	# ${__LC_DBG} sed -i \
-	# -e 's#/pkg/qct/software/python/3.4.0/bin/python#${__PYTHON}#g' \
-	# -e 's#/pkg/qct/software/perl/q3_10/bin/perl#${__PYTHON}#g' \
-	# -e 's#${PYTHON}#${__PYTHON}#g' \
-	# $files
+enFmtBack=0; fmtBakDir=$mrgDir;
 
 
-	# #ifdef #else
-	${__LC_DBG} sed -i \
-		-e 's/^\s*#\(if.*\)/__\1/g'  \
-		-e 's/^\s*#\(els.*\)/__\1/g' \
-		-e 's/^\s*#\(end.*\)/__\1/g' \
-		$files
+function backup_copy_dirs {
+  src_dir=$1
+  tgt_dir=$2
 
-	# rmv blank
-	${__LC_DBG} sed -i -e "/^#.*$/d; /^\s\+$/d; /^$/d" $files
-
-	# rvt back ifdef/else...
-	${__LC_DBG} sed -i \
-		-e 's/^__\(if.*\)/#\1/g'  \
-		-e 's/^__\(els.*\)/#\1/g' \
-		-e 's/^__\(end.*\)/#\1/g' \
-	$files
+  echo "#--SINFO: begin to copy $src_dir to $tgt_dir ..."
 
 
-	i=0
-	while [ $i -le ${#orgVars} ]; do
-		echo "--SINFO: i=$i"
-		org_var_u=${orgVars[$i]}
-		new_var_u=${newVars[$i]}
-		org_var_l=`echo ${orgVars[$i]} | tr 'A-Z' 'a-z'`
-		new_var_l=`echo ${newVars[$i]} | tr 'A-Z' 'a-z'`
+  if [ ! -d $src_dir ]; then
+    echo "**ERROR: src_dir:$src_dir not exist!"
+    exit 1
+  fi
 
-		#echo "s/$org_var_u/$new_var_u/g" $files
-		#echo "s/$org_var_l/$new_var_l/g" $files
+  # back-up 3 times
+  [ -d $tgtDir.bak2 ] && rm -rf $tgtDir.bak2
+  [ -d $tgtDir.bak1 ] && mv $tgtDir.bak1 $tgtDir.bak2
+  [ -d $tgtDir.bak0 ] && mv $tgtDir.bak0 $tgtDir.bak1
+  [ -d $tgt_dir ]      && mv $tgt_dir      $tgtDir.bak0
 
-		${__LC_DBG} sed -i \
-			-e "s/$org_var_u/$new_var_u/g" \
-			-e "s/$org_var_l/$new_var_l/g" \
-			$files
+  cp -rf $src_dir $tgt_dir
+}
 
-		i=`expr $i + 1`
-	done
 
+if [ $enFmt0 -eq 1 ]; then
+  srcDir=$orgDir;
+  tgtDir=$fm0Dir;
+  backup_copy_dirs $srcDir $tgtDir;
+  if [ $? -gt 0 ]; then
+    echo "**ERROR: backup_copy_dirs $srcDir $tgtDir failed!"
+    exit 1
+  fi
+  files="$tgtDir/*.*"
+
+  # #ifdef #else
+  ${__LC_DBG} sed -i \
+    -e 's/^\s*#\(if.*\)/__\1/g'  \
+    -e 's/^\s*#\(els.*\)/__\1/g' \
+    -e 's/^\s*#\(end.*\)/__\1/g' \
+    $files
+
+  # rmv blank
+  ${__LC_DBG} sed -i -e "/^#.*$/d; /^\s\+$/d; /^$/d" $files
+
+  # rvt back ifdef/else...
+  ${__LC_DBG} sed -i \
+    -e 's/^__\(if.*\)/#\1/g'  \
+    -e 's/^__\(els.*\)/#\1/g' \
+    -e 's/^__\(end.*\)/#\1/g' \
+   $files
 fi
 
+if [ $enFmt1 -eq 1 ]; then
+  srcDir=$fm0Dir;
+  tgtDir=$fm1Dir;
+  backup_copy_dirs $srcDir $tgtDir;
+  if [ $? -gt 0 ]; then
+    echo "**ERROR: backup_copy_dirs $srcDir $tgtDir failed!"
+    exit 1
+  fi
+  files="$tgtDir/*.*"
+
+  i=0
+  while [ $i -lt ${#orgVars[*]} ]; do
+    org_var_u=${orgVars[$i]}
+    new_var_u=${new1Vars[$i]}
+    org_var_l=`echo ${orgVars[$i]} | tr 'A-Z' 'a-z'`
+    new_var_l=`echo ${new1Vars[$i]} | tr 'A-Z' 'a-z'`
+
+    echo "            fmt1: i=$i, org_var:$org_var_u; new_var:$new_var_u;"
+
+    ${__LC_DBG} sed -i \
+      -e "s/$org_var_u/$new_var_u/g" \
+      -e "s/$org_var_l/$new_var_l/g" \
+      $files
+
+    i=`expr $i + 1`
+  done
+fi
 
 if [ $enFmt2 -eq 1 ]; then
-	echo "--SINFO: begin to format 2, ..."
-	[ -d $fmtDir2.bak1 ] && mv $fmtDir2.bak1 $fmtDir2.bak2
-	[ -d $fmtDir2.bak0 ] && mv $fmtDir2.bak0 $fmtDir2.bak1
-	[ -d $fmtDir2 ] 		&& mv $fmtDir2 		$fmtDir2.bak0
+  srcDir=$fm1Dir;
+  tgtDir=$fm2Dir;
+  backup_copy_dirs $srcDir $tgtDir;
+  if [ $? -gt 0 ]; then
+    echo "**ERROR: backup_copy_dirs $srcDir $tgtDir failed!"
+    exit 1
+  fi
+  files="$tgtDir/*.*"
 
-	cp -rf $fmtDir $fmtDir2
-	files="$fmtDir2/*.*"
-	echo "--SDBG: newVars len=${#newVars}"
-	i=0
-	while [ $i -lt ${#newVars} ]; do
-		echo "--SINFO: i=$i"
-		org_var_u=${newVars[$i]}
-		new_var_u=${newVars1[$i]}
-		org_var_l=`echo ${newVars[$i]} | tr 'A-Z' 'a-z'`
-		new_var_l=`echo ${newVars1[$i]} | tr 'A-Z' 'a-z'`
+  i=0
+  while [ $i -lt ${#new1Vars[*]} ]; do
+    org_var_u=${new1Vars[$i]}
+    new_var_u=${new2Vars[$i]}
+    org_var_l=`echo ${new1Vars[$i]} | tr 'A-Z' 'a-z'`
+    new_var_l=`echo ${new2Vars[$i]} | tr 'A-Z' 'a-z'`
 
-		#echo "s/$org_var_u/$new_var_u/g" $files
-		#echo "s/$org_var_l/$new_var_l/g" $files
+    echo "            fmt2: i=$i, org_var:$org_var_u; new_var:$new_var_u;"
 
-		${__LC_DBG} sed -i \
-			-e "s/$org_var_u/$new_var_u/g" \
-			-e "s/$org_var_l/$new_var_l/g" \
-			$files
+    ${__LC_DBG} sed -i \
+      -e "s/$org_var_u/$new_var_u/g" \
+      -e "s/$org_var_l/$new_var_l/g" \
+      $files
 
-		i=`expr $i + 1`
-	done
-
+    i=`expr $i + 1`
+  done
 fi
-
 
 if [ $enMrg -eq 1 ]; then
-	echo "--SINFO: begin to merge $fmtDir "
-	files="$fmtDir/*.* ./fmtMake"
-	[ -e $mrgFile ] && rm -f $mrgFile
-	mkdir -p `dirname $mrgFile`
-	touch $mrgFile
-	for file in $files; do
-		fname=`basename $file`
-		echo "--File: $fname"
-		echo "#__FILE_: $fname {{{1" >> $mrgFile
-		cat $file >> $mrgFile
-		echo "#__FILE_: $fname 1}}}" >> $mrgFile
-	done
+  mrgFile=`basename $mrgDir`.mrg.txt
+  echo "#--SINFO: begin to merge $mrgDir files to $mrgFile"
+
+  if [ ! -z "$mrgFilesIncl" ]; then
+    files=`echo $mrgFilesIncl | sed "s#\(\S\+\)#$mrgDir/\1#g"`
+  else
+    files="$mrgDir/*.* ${script_name}"
+  fi
+
+  echo "#--SINFO: files $files"
+
+  [ -e $mrgFile ] && rm -f $mrgFile
+  mkdir -p `dirname $mrgFile`
+  touch $mrgFile
+  for file in $files; do
+    fname=`basename $file`
+
+    if [ ! -z "$mrgFilesExcl" ]; then
+      file_excluded=`echo \"$mrgFilesExcl\" | grep -c $fname`
+      if [ $file_excluded -gt 0 ]; then
+        echo "#--SINFO: exclude file $fname"
+        continue
+      fi
+    fi
+    echo "#--SINFO: merge File: $fname"
+    echo "#__FILE_: $fname {{{1" >> $mrgFile
+    cat $file >> $mrgFile
+    echo "#__FILE_: $fname 1}}}" >> $mrgFile
+  done
+
+  line_cnt=`cat $mrgFile | wc -l`
+  echo "#--SINFO: total $line_cnt lines"
 fi
 
 
+
+if [ $enFmtBack -eq 1 ]; then
+  tgtDir=$fmtBakDir.back 
+  rm -rf $tgtDir
+  cp -rf $fmtBakDir $tgtDir
+
+  sed -i -e "s/AA_/ABV_/g"  \
+         -e "s/SVABV/SVA/g" $tgtDir/abv.mk
+
+  sed -i -e "s/AA_/DUT_/g"  $tgtDir/dut.mk
+  sed -i -e "s/AA_/HDL_/g"  $tgtDir/hdl.mk
+
+  sed -i -e "s/ALIBS/ABV_LIBS/g"  \
+         -e "s/alibs/abv_libs/g"    $tgtDir/abv_libs.mk
+
+  sed -i -e "s/ALIBS/COMMON_LIBS/g" \
+         -e "s/alibs/common_libs/g"  $tgtDir/common_libs.mk
+
+  sed -i -e "s/ALIBS/DUT_LIBS/g"  \
+         -e "s/alibs/dut_libs/g"  $tgtDir/dut_libs.mk
+fi
