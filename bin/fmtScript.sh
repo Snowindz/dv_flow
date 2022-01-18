@@ -26,7 +26,6 @@
 ######################################################################
 __LC_DBG=
 #__LC_DBG="echo"
-
 script_name=./fmtMake
 
 orgDir=./flows.org; orgVars=(QBAR QVMR QC_OPTS QBLD QAFENE);
@@ -36,21 +35,11 @@ enFmt0=0; fm0Dir=./flows.fmt0;
 enFmt1=0; fm1Dir=./flows.fmt1; new1Vars=(AACER AARGR AA_OPTS AABLD AAFENE);
 enFmt2=0; fm2Dir=./flows.fmt2; new2Vars=(XXCER XXRGR XX_OPTS XXBLD XXFENE);
 
-enMrg=1;  mrgDir=./flows.tgt.back;
-mrgFilesIncl=
-mrgFilesExcl=
-#mrgFilesIncl="abv.mk dut.mk elab.mk"
-#mrgFilesExcl="abv.mk"
-
-enFmtBack=0; fmtBakDir=$mrgDir;
-
-
 function backup_copy_dirs {
   src_dir=$1
   tgt_dir=$2
 
   echo "#--SINFO: begin to copy $src_dir to $tgt_dir ..."
-
 
   if [ ! -d $src_dir ]; then
     echo "**ERROR: src_dir:$src_dir not exist!"
@@ -149,62 +138,4 @@ if [ $enFmt2 -eq 1 ]; then
 
     i=`expr $i + 1`
   done
-fi
-
-if [ $enMrg -eq 1 ]; then
-  mrgFile=`basename $mrgDir`.mrg.txt
-  echo "#--SINFO: begin to merge $mrgDir files to $mrgFile"
-
-  if [ ! -z "$mrgFilesIncl" ]; then
-    files=`echo $mrgFilesIncl | sed "s#\(\S\+\)#$mrgDir/\1#g"`
-  else
-    files="$mrgDir/*.* ${script_name}"
-  fi
-
-  echo "#--SINFO: files $files"
-
-  [ -e $mrgFile ] && rm -f $mrgFile
-  mkdir -p `dirname $mrgFile`
-  touch $mrgFile
-  for file in $files; do
-    fname=`basename $file`
-
-    if [ ! -z "$mrgFilesExcl" ]; then
-      file_excluded=`echo \"$mrgFilesExcl\" | grep -c $fname`
-      if [ $file_excluded -gt 0 ]; then
-        echo "#--SINFO: exclude file $fname"
-        continue
-      fi
-    fi
-    echo "#--SINFO: merge File: $fname"
-    echo "#__FILE_: $fname {{{1" >> $mrgFile
-    cat $file >> $mrgFile
-    echo "#__FILE_: $fname 1}}}" >> $mrgFile
-  done
-
-  line_cnt=`cat $mrgFile | wc -l`
-  echo "#--SINFO: total $line_cnt lines"
-fi
-
-
-
-if [ $enFmtBack -eq 1 ]; then
-  tgtDir=$fmtBakDir.back 
-  rm -rf $tgtDir
-  cp -rf $fmtBakDir $tgtDir
-
-  sed -i -e "s/AA_/ABV_/g"  \
-         -e "s/SVABV/SVA/g" $tgtDir/abv.mk
-
-  sed -i -e "s/AA_/DUT_/g"  $tgtDir/dut.mk
-  sed -i -e "s/AA_/HDL_/g"  $tgtDir/hdl.mk
-
-  sed -i -e "s/ALIBS/ABV_LIBS/g"  \
-         -e "s/alibs/abv_libs/g"    $tgtDir/abv_libs.mk
-
-  sed -i -e "s/ALIBS/COMMON_LIBS/g" \
-         -e "s/alibs/common_libs/g"  $tgtDir/common_libs.mk
-
-  sed -i -e "s/ALIBS/DUT_LIBS/g"  \
-         -e "s/alibs/dut_libs/g"  $tgtDir/dut_libs.mk
 fi
