@@ -30,7 +30,7 @@ foreach cmd $user_cmds {
 # run
 ##############################
 # - common.tcl
-source $env(DV_CAR_ROOT)/tcl/cmn/dump_time.tcl
+source $env(DV_CAR_ROOT)/tcl/cmn/dump_times.tcl
 source $env(DV_CAR_ROOT)/tcl/$rgr_vars(SIM)/save_and_restore.tcl
 
 set sim_run_time ""
