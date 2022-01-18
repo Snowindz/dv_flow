@@ -15,13 +15,15 @@ source $env(DV_CAR_ROOT)/tcl/$rgr_vars(SIM)/dump_evcd.tcl
 
 run_tcl_cmd $tcl_file "config endofsim noexit"
 
-set user_cmds [list]
-if { [info exists env(RGR_SIMV_ON_START_TCL_CMDS) ] } {
-  set user_cmds [ split $env(RGR_SIMV_ON_START_TCL_CMDS) {;} ]
-  puts "[$tcl_file] Info: found user defined cmd files from env RGR_SIMV_ON_START_TCL_CMDS"
-}
+#set user_cmds [list]
+#if { [info exists env(RGR_SIMV_ON_START_TCL_CMDS) ] } {
+#  set user_cmds [ split $env(RGR_SIMV_ON_START_TCL_CMDS) {;} ]
+#  puts "[$tcl_file] Info: found user defined cmd files from env RGR_SIMV_ON_START_TCL_CMDS"
+#}
+
+set user_cmds [get_rgr_var_list RGR_SIMV_ON_START_TCL_CMDS]
 foreach cmd $user_cmds {
-  run_tcl_cmd $tcl_file $cmd
+  run_tcl_cmd $tcl_file "$cmd;"
 }
 
 
@@ -29,14 +31,20 @@ foreach cmd $user_cmds {
 ##############################
 # run
 ##############################
-# - common.tcl
-source $env(DV_CAR_ROOT)/tcl/cmn/dump_times.tcl
-source $env(DV_CAR_ROOT)/tcl/$rgr_vars(SIM)/save_and_restore.tcl
+# disable dump_times (contains run command) for restore path
+if { [info exist rgr_vars(SAR_RESTORE_FILE)] ==0  } {
+  source $env(DV_CAR_ROOT)/tcl/cmn/dump_times.tcl
+}
+source $env(DV_CAR_ROOT)/tcl/vcs_mx/save_restore.tcl
+
+#TBD: source $env(DV_CAR_ROOT)/tcl/vcs_mx/sar_du_check.tcl
 
 set sim_run_time ""
-if { [info exist rgr_vars(__SIM_RUN_TIME) ] } {
-  set sim_run_time $rgr_vars(__SIM_RUN_TIME)
-}
+#if { [info exist rgr_vars(__SIM_RUN_TIME) ] } {
+#  set sim_run_time $rgr_vars(__SIM_RUN_TIME)
+#}
+set sim_run_time [get_rgr_vars __SIM_RUN_TIME]
+
 run_tcl_cmd $tcl_file "run $sim_run_time"
 
 ##############################
@@ -46,13 +54,18 @@ run_tcl_cmd $tcl_file "run $sim_run_time"
 # last save
 # dump flush/off
 
-set user_cmds [list]
-if { [info exists env(RGR_SIMV_ON_EXIT_TCL_CMDS) ] } {
-  set user_cmds [ split $env(RGR_SIMV_ON_EXIT_TCL_CMDS) {;} ]
-  puts "[$tcl_file] Info: found user defined cmd files from env RGR_SIMV_ON_EXIT_TCL_CMDS"
-}
+#set user_cmds [list]
+#if { [info exists env(RGR_SIMV_ON_EXIT_TCL_CMDS) ] } {
+#  set user_cmds [ split $env(RGR_SIMV_ON_EXIT_TCL_CMDS) {;} ]
+#  puts "[$tcl_file] Info: found user defined cmd files from env RGR_SIMV_ON_EXIT_TCL_CMDS"
+#}
+#foreach cmd $user_cmds {
+#  run_tcl_cmd $tcl_file $cmd
+#}
+
+set user_cmds [get_rgr_var_list RGR_SIMV_ON_EXIT_TCL_CMDS]
 foreach cmd $user_cmds {
-  run_tcl_cmd $tcl_file $cmd
+  run_tcl_cmd $tcl_file "$cmd;"
 }
 
 
