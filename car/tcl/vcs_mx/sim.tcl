@@ -6,13 +6,12 @@ puts "# Source vcs_mx/$tcl_file"
 ##############################
 # on_start
 ##############################
-source $env(DV_CAR_ROOT)/tcl/verdi/dump_fsdb.tcl
-
 # fsdb/vpd/vcd/evcd dump setup
-# fsdb.tcl
-# vpd.tcl
-# vcd.tcl
-# evcd.tcl
+source $env(DV_CAR_ROOT)/tcl/verdi/dump_fsdb.tcl
+source $env(DV_CAR_ROOT)/tcl/$rgr_vars(SIM)/dump_vpd.tcl
+source $env(DV_CAR_ROOT)/tcl/$rgr_vars(SIM)/dump_vcd.tcl
+source $env(DV_CAR_ROOT)/tcl/$rgr_vars(SIM)/dump_evcd.tcl
+
 
 run_tcl_cmd $tcl_file "config endofsim noexit"
 
@@ -31,8 +30,9 @@ foreach cmd $user_cmds {
 # run
 ##############################
 # - common.tcl
-# - dump_times.cl
-# - sar.tcl
+source $env(DV_CAR_ROOT)/tcl/cmn/dump_time.tcl
+source $env(DV_CAR_ROOT)/tcl/$rgr_vars(SIM)/save_and_restore.tcl
+
 set sim_run_time ""
 if { [info exist rgr_vars(__SIM_RUN_TIME) ] } {
   set sim_run_time $rgr_vars(__SIM_RUN_TIME)
