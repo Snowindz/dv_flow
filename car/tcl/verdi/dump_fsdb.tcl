@@ -6,7 +6,7 @@ puts "# Source vcs_mx/$tcl_file"
 set fsdb_dump_on 0
 # define WAVES_FSDB_FILE
 if { [ info exists rgr_vars(WAVES_FSDB_FILE) ] } {
-  if { [info exists rgr_vars(WAVES_DUMP_ON)] } {
+  if { [ info exists rgr_vars(WAVES_DUMP_ON) ] } {
     set fsdb_dump_on $rgr_vars(WAVES_DUMP_ON)
   } else {
     set fsdb_dump_on 1
@@ -62,16 +62,16 @@ foreach sfile $WAVES_FSDB_LST_FILES {
     run_tcl_cmd $tcl_file $cmd
 }
 
-if { [llength WAVES_FSDB_SUPPRESS_SCOPES] != 0 } {
+if { [llength $WAVES_FSDB_SUPPRESS_SCOPES] != 0 } {
     foreach scope $WAVES_FSDB_SUPPRESS_SCOPES {
         set cmd "${fsdb_task_call}fsdbSuppress $scope"
         run_tcl_cmd $tcl_file $cmd
     }
 }
 
-if { [llength WAVES_FSDB_SCOPES] != 0 } {
+if { [llength $WAVES_FSDB_SCOPES] != 0 } {
 
-    if { [llength WAVES_FSDB_SCOPES] != [llength WAVES_FSDB_DEPTHS] } {
+    if { [llength $WAVES_FSDB_SCOPES] != [llength $WAVES_FSDB_DEPTHS] } {
         puts "# $tcl_file: Error: WAVES_FSDB_SCOPES/WAVES_FSDB_DEPTHS list length not match"
         puts "# $tcl_file: "
         puts "# $tcl_file:    WAVES_FSDB_SCOPES=$WAVES_FSDB_SCOPES"
