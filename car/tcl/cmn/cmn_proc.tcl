@@ -1,10 +1,14 @@
 # Common TCL procs
+
 # Avoid of dumplication call
 if { [ info exists __cmn_proc__tcl ] == 1 } {
   exit 0
 }
  
 set __cmn_proc__tcl 1
+
+variable rgr_vars
+
 
 # Run cmd and check result
 # - tclfile: the tcl file called
@@ -24,7 +28,33 @@ proc run_tcl_cmd { tclfile cmd } {
 }
   
   
-  
+proc get_rgr_var_bool {v} {
+    variable rgr_vars
+    set $v 0
+    if { [ info exists rgr_vars($v) ] && $rgr_vars($v) != 0 } { 
+        set $v 1
+    }
+    return [subst $$v]
+}
+
+proc get_rgr_var {v} {
+    variable rgr_vars
+    set $v ''
+    if { [ info exists rgr_vars($v) ] } { 
+        set $v rgr_vars($v)
+    }
+    return [subst $$v]
+}
+proc get_rgr_var_list {v} {
+    variable rgr_vars
+    set $v [list]
+    if { [ info exists rgr_vars($v) ] && [llength $rgr_vars($v) > 0 ] } { 
+        set $v [ split $rgr_vars($v) ]
+    }
+    return [subst $$v]
+}
+
+
   
   
   
