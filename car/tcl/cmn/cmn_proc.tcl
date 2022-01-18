@@ -27,7 +27,8 @@ proc run_tcl_cmd { tclfile cmd } {
   }
 }
   
-  
+
+# return v from rgr_var
 proc get_rgr_var_bool {v} {
     variable rgr_vars
     set $v 0
@@ -45,6 +46,7 @@ proc get_rgr_var {v} {
     }
     return [subst $$v]
 }
+
 proc get_rgr_var_list {v} {
     variable rgr_vars
     set $v [list]
